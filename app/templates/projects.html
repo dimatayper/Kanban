@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Your Projects</h2>
+    <form method="POST" action="{{ url_for('main.projects') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <h3>Existing Projects</h3>
+    <ul class="list-group">
+        {% for project in projects %}
+            <li class="list-group-item">
+                <a href="{{ url_for('main.project', project_id=project.id) }}">{{ project.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

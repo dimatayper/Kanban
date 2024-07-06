@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Project: {{ project.name }}</h2>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#newTaskModal">Add Task</button>
+    </div>
+
+    <div class="kanban-board">
+        <div class="kanban-column">
+            <h4>To Do</h4>
+            <ul id="todo-tasks" class="kanban-tasks">
+                {% for task in project.tasks if task.status == 'todo' %}
+                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="kanban-column">
+            <h4>In Progress</h4>
+            <ul id="inprogress-tasks" class="kanban-tasks">
+                {% for task in project.tasks if task.status == 'inprogress' %}
+                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="kanban-column">
+            <h4>Done</h4>
+            <ul id="done-tasks" class="kanban-tasks">
+                {% for task in project.tasks if task.status == 'done' %}
+                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTaskModalLabel">New Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ url_for('main.add_task', project_id=project.id) }}">
+                    <div class="modal-body">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% endblock %}
