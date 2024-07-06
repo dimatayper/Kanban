@@ -82,9 +82,11 @@ def project(project_id):
         return redirect(url_for('main.dashboard'))
     
     form = TaskForm()
-    form.assignee.choices = [(user.id, user.username) for user in [project.owner] + [access.user for access in project.shared_with]]
+    project_users = [project.owner] + [access.user for access in project.shared_with]
+    form.assignee.choices = [(user.id, user.username) for user in project_users]
     
-    return render_template('project.html', project=project, form=form)
+    return render_template('project.html', project=project, form=form, project_users=project_users)
+
 
 @bp.route('/project/<int:project_id>/add_task', methods=['POST'])
 @login_required
@@ -120,13 +122,31 @@ def update_task_status(task_id):
     db.session.commit()
     return jsonify({'success': True})
 
+@bp.route('/update_task_assignee/<int:task_id>', methods=['POST'])
+@login_required
+def update_task_assignee(task_id):
+    task = Task.query.get_or_404(task_id)
+    if task.project.owner != current_user and not ProjectAccess.query.filter_by(project_id=task.project_id, user_id=current_user.id).first():
+        flash('You do not have permission to update this task.')
+        return redirect(url_for('main.project', project_id=task.project_id))
+    
+    assignee_id = request.form.get('assignee')
+    if assignee_id:
+        task.assignee_id = assignee_id
+        db.session.commit()
+        flash('Task assignee updated successfully!')
+    else:
+        flash('Invalid assignee.')
+    
+    return redirect(url_for('main.project', project_id=task.project_id))
+
 @bp.route('/get_task_description/<int:task_id>', methods=['GET'])
 @login_required
 def get_task_description(task_id):
     task = Task.query.get_or_404(task_id)
     if task.project.owner != current_user and not ProjectAccess.query.filter_by(project_id=task.project_id, user_id=current_user.id).first():
         return jsonify({'success': False}), 403
-    return jsonify({'title': task.title, 'description': task.description})
+    return jsonify({'title': task.title, 'description': task.description, 'assignee_id': task.assignee_id})
 
 @bp.route('/delete_task/<int:task_id>', methods=['POST'])
 @login_required
