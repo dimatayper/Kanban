@@ -11,26 +11,41 @@
 
     <div class="kanban-board">
         <div class="kanban-column">
-            <h4>To Do</h4>
-            <ul id="todo-tasks" class="kanban-tasks">
+            <h4 class="text-center">To Do</h4>
+            <ul id="todo-tasks" class="kanban-tasks list-group">
                 {% for task in project.tasks if task.status == 'todo' %}
-                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                    <li class="kanban-task list-group-item" id="task-{{ task.id }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ task.title }}</span>
+                            <span class="badge bg-primary">{{ task.status }}</span>
+                        </div>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
         <div class="kanban-column">
-            <h4>In Progress</h4>
-            <ul id="inprogress-tasks" class="kanban-tasks">
+            <h4 class="text-center">In Progress</h4>
+            <ul id="inprogress-tasks" class="kanban-tasks list-group">
                 {% for task in project.tasks if task.status == 'inprogress' %}
-                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                    <li class="kanban-task list-group-item" id="task-{{ task.id }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ task.title }}</span>
+                            <span class="badge bg-warning">{{ task.status }}</span>
+                        </div>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
         <div class="kanban-column">
-            <h4>Done</h4>
-            <ul id="done-tasks" class="kanban-tasks">
+            <h4 class="text-center">Done</h4>
+            <ul id="done-tasks" class="kanban-tasks list-group">
                 {% for task in project.tasks if task.status == 'done' %}
-                    <li class="kanban-task" id="task-{{ task.id }}">{{ task.title }}</li>
+                    <li class="kanban-task list-group-item" id="task-{{ task.id }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ task.title }}</span>
+                            <span class="badge bg-success">{{ task.status }}</span>
+                        </div>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
