@@ -1,10 +1,16 @@
 body {
     background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    margin-bottom: 20px;
 }
 
 .kanban-board {
     display: flex;
     justify-content: space-around;
+    gap: 20px;
 }
 
 .kanban-column {
@@ -28,6 +34,11 @@ body {
     margin-bottom: 10px;
     padding: 10px;
     cursor: move;
+    transition: background-color 0.3s ease;
+}
+
+.kanban-task:hover {
+    background-color: #f1f1f1;
 }
 
 .hide {
@@ -36,4 +47,14 @@ body {
 
 .drag-over {
     border: 2px dashed #007bff;
+}
+
+.modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
 }

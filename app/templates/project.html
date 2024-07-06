@@ -2,8 +2,8 @@
 
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Project: {{ project.name }}</h2>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#newTaskModal">Add Task</button>
+        <h2 class="h3">Project: {{ project.name }}</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTaskModal">Add Task</button>
     </div>
 
     <div class="kanban-board">
@@ -39,15 +39,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="taskDescriptionModalLabel">Task Description</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Task description will be loaded here by JavaScript -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-danger" id="deleteTaskBtn">Delete Task</button>
                 </div>
             </div>
@@ -60,24 +58,22 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="newTaskModalLabel">New Task</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="{{ url_for('main.add_task', project_id=project.id) }}">
                     <div class="modal-body">
                         {{ form.hidden_tag() }}
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ form.title.label(class="form-label") }}
                             {{ form.title(class="form-control") }}
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ form.description.label(class="form-label") }}
                             {{ form.description(class="form-control") }}
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Add Task</button>
                     </div>
                 </form>
