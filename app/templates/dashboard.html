@@ -19,6 +19,20 @@
         {% endfor %}
     </div>
 
+    <h2 class="h4 mt-5">Shared with you</h2>
+    <div class="row">
+        {% for project in shared_projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ project.name }}</h5>
+                        <a href="{{ url_for('main.project', project_id=project.id) }}" class="btn btn-primary mt-auto">View Project</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
     <!-- Modal -->
     <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -33,6 +47,11 @@
                         <div class="mb-3">
                             {{ form.name.label(class="form-label") }}
                             {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.share_with.label(class="form-label") }}
+                            {{ form.share_with(class="form-control") }}
+                            <small class="form-text text-muted">Enter emails separated by commas</small>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -3,7 +3,10 @@
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3">Project: {{ project.name }}</h2>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTaskModal">Add Task</button>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTaskModal">Add Task</button>
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#shareProjectModal">Share Project</button>
+        </div>
     </div>
 
     <div class="kanban-board">
@@ -80,5 +83,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for Sharing Project -->
+    <div class="modal fade" id="shareProjectModal" tabindex="-1" aria-labelledby="shareProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareProjectModalLabel">Share Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ url_for('main.share_project', project_id=project.id) }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <small class="form-text text-muted">Enter the email of the user you want to share the project with.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Share Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 {% endblock %}

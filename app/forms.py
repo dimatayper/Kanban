@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from .models import User
-from . import db
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -28,9 +27,10 @@ class LoginForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     name = StringField('Project Name', validators=[DataRequired()])
+    share_with = StringField('Share with (comma-separated emails)')
     submit = SubmitField('Create Project')
 
 class TaskForm(FlaskForm):
     title = StringField('Task Title', validators=[DataRequired()])
-    description = StringField('Task Description')
+    description = TextAreaField('Task Description')
     submit = SubmitField('Add Task')
