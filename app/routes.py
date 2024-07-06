@@ -148,3 +148,23 @@ def share_project(project_id):
         flash('User with this email does not exist.')
     
     return redirect(url_for('main.project', project_id=project_id))
+
+@bp.route('/delete_project/<int:project_id>', methods=['POST'])
+@login_required
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.owner != current_user:
+        flash('You do not have permission to delete this project.')
+        return redirect(url_for('main.dashboard'))
+    
+    # Удаление задач проекта
+    for task in project.tasks:
+        db.session.delete(task)
+    
+    # Удаление доступа других пользователей
+    ProjectAccess.query.filter_by(project_id=project.id).delete()
+    
+    db.session.delete(project)
+    db.session.commit()
+    flash('Project deleted successfully!')
+    return redirect(url_for('main.dashboard'))
