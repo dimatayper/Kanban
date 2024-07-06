@@ -1,11 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tasks = document.querySelectorAll('.kanban-task');
     const columns = document.querySelectorAll('.kanban-tasks');
-
+    const modal = document.getElementById('taskDescriptionModal');
+    const modalTitle = modal.querySelector('.modal-title');
+    const modalBody = modal.querySelector('.modal-body');
+    const deleteTaskBtn = document.getElementById('deleteTaskBtn');
+    
+    let currentTaskId = null;
+    
     tasks.forEach(task => {
         task.draggable = true;
         task.addEventListener('dragstart', dragStart);
         task.addEventListener('dragend', dragEnd);
+        task.addEventListener('dblclick', () => {
+            currentTaskId = task.id.split('-')[1];
+            fetch(`/get_task_description/${currentTaskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalTitle.textContent = data.title;
+                    modalBody.textContent = data.description;
+                    $('#taskDescriptionModal').modal('show');
+                });
+        });
+    });
+
+    deleteTaskBtn.addEventListener('click', () => {
+        if (currentTaskId) {
+            fetch(`/delete_task/${currentTaskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`task-${currentTaskId}`).remove();
+                    $('#taskDescriptionModal').modal('hide');  // Закрытие модального окна
+                } else {
+                    console.error('Error deleting task');
+                }
+            });
+        }
     });
 
     columns.forEach(column => {

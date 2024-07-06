@@ -99,3 +99,23 @@ def update_task_status(task_id):
     task.status = data['status']
     db.session.commit()
     return jsonify({'success': True})
+
+@bp.route('/get_task_description/<int:task_id>', methods=['GET'])
+@login_required
+def get_task_description(task_id):
+    task = Task.query.get_or_404(task_id)
+    if task.project.owner != current_user:
+        return jsonify({'success': False}), 403
+    return jsonify({'title': task.title, 'description': task.description})
+
+@bp.route('/delete_task/<int:task_id>', methods=['POST'])
+@login_required
+def delete_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    project_id = task.project.id
+    if task.project.owner != current_user:
+        return jsonify({'success': False}), 403
+    db.session.delete(task)
+    db.session.commit()
+    return jsonify({'success': True})
+
