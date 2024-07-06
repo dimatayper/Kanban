@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -18,5 +18,10 @@ def create_app():
 
     from .routes import bp
     app.register_blueprint(bp)
+
+    # Error handler for 404
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return redirect(url_for('main.login'))
 
     return app

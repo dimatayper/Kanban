@@ -83,9 +83,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (draggable && e.target.classList.contains('kanban-tasks')) {
             e.target.appendChild(draggable);
 
-            // Update task status in the database
+            // Update task status in the database and in the UI
             const status = e.target.id.split('-')[0];
             updateTaskStatus(id.split('-')[1], status);
+            const statusBadge = draggable.querySelector('.badge');
+            statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            if (status === 'todo') {
+                statusBadge.className = 'badge bg-primary';
+            } else if (status === 'inprogress') {
+                statusBadge.className = 'badge bg-warning';
+            } else if (status === 'done') {
+                statusBadge.className = 'badge bg-success';
+            }
         }
     }
 
