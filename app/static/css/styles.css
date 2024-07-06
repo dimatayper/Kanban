@@ -53,11 +53,28 @@ body {
     margin-bottom: 10px;
     padding: 10px;
     cursor: move;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .kanban-task:hover {
     background-color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-title {
+    font-size: 1.1em;
+}
+
+.task-footer {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .hide {
