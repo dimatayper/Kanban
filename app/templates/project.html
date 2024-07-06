@@ -22,6 +22,9 @@
                             <span>{{ task.title }}</span>
                             <span class="badge bg-primary">{{ task.status }}</span>
                         </div>
+                        {% if task.assignee %}
+                            <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -35,6 +38,9 @@
                             <span>{{ task.title }}</span>
                             <span class="badge bg-warning">{{ task.status }}</span>
                         </div>
+                        {% if task.assignee %}
+                            <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -48,6 +54,9 @@
                             <span>{{ task.title }}</span>
                             <span class="badge bg-success">{{ task.status }}</span>
                         </div>
+                        {% if task.assignee %}
+                            <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -91,6 +100,10 @@
                         <div class="mb-3">
                             {{ form.description.label(class="form-label") }}
                             {{ form.description(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.assignee.label(class="form-label") }}
+                            {{ form.assignee(class="form-select") }}
                         </div>
                     </div>
                     <div class="modal-footer">

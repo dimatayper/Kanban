@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from .models import User
 
@@ -33,4 +33,9 @@ class ProjectForm(FlaskForm):
 class TaskForm(FlaskForm):
     title = StringField('Task Title', validators=[DataRequired()])
     description = TextAreaField('Task Description')
+    assignee = SelectField('Assignee', coerce=int)  # Добавлено поле для выбора ответственного
     submit = SubmitField('Add Task')
+
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.assignee.choices = []  # Будет заполнено в маршруте

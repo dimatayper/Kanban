@@ -44,6 +44,8 @@ docker-compose up --build
 
 4. Apply the database migrations
 ```bash
+docker-compose exec web flask db init
+docker-compose exec web flask db migrate -m "Initial migration"
 docker-compose exec web flask db upgrade
 ```
 

@@ -25,6 +25,8 @@ class Task(db.Model):
     status = db.Column(db.String(20), nullable=False, default='todo')
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    assignee = db.relationship('User', backref='assigned_tasks', lazy=True)
 
 class ProjectAccess(db.Model):
     id = db.Column(db.Integer, primary_key=True)

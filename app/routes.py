@@ -80,7 +80,10 @@ def project(project_id):
     if project.owner != current_user and not ProjectAccess.query.filter_by(project_id=project_id, user_id=current_user.id).first():
         flash('You do not have permission to view this project.')
         return redirect(url_for('main.dashboard'))
+    
     form = TaskForm()
+    form.assignee.choices = [(user.id, user.username) for user in [project.owner] + [access.user for access in project.shared_with]]
+    
     return render_template('project.html', project=project, form=form)
 
 @bp.route('/project/<int:project_id>/add_task', methods=['POST'])
@@ -90,9 +93,17 @@ def add_task(project_id):
     if project.owner != current_user and not ProjectAccess.query.filter_by(project_id=project_id, user_id=current_user.id).first():
         flash('You do not have permission to add tasks to this project.')
         return redirect(url_for('main.dashboard'))
+    
     form = TaskForm()
+    form.assignee.choices = [(user.id, user.username) for user in [project.owner] + [access.user for access in project.shared_with]]
+    
     if form.validate_on_submit():
-        task = Task(title=form.title.data, description=form.description.data, project=project)
+        task = Task(
+            title=form.title.data, 
+            description=form.description.data, 
+            project=project,
+            assignee_id=form.assignee.data if form.assignee.data != 'None' else None
+        )
         db.session.add(task)
         db.session.commit()
         flash('Task added successfully!')
