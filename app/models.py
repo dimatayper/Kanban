@@ -27,7 +27,7 @@ class Task(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     assignee = db.relationship('User', backref='assigned_tasks', lazy=True)
-    story_points = db.Column(db.Integer, nullable=True)  # Добавлено поле для story points
+    story_points = db.Column(db.Integer, default=0)
 
 class ProjectAccess(db.Model):
     id = db.Column(db.Integer, primary_key=True)

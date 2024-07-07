@@ -100,12 +100,18 @@ def add_task(project_id):
     form.assignee.choices = [(user.id, user.username) for user in [project.owner] + [access.user for access in project.shared_with]]
     
     if form.validate_on_submit():
+        story_points = form.story_points.data
+        if not story_points or not story_points.isdigit():
+            story_points = 0
+        else:
+            story_points = int(story_points)
+        
         task = Task(
             title=form.title.data, 
             description=form.description.data, 
             project=project,
             assignee_id=form.assignee.data if form.assignee.data != 'None' else None,
-            story_points=form.story_points.data 
+            story_points=story_points
         )
         db.session.add(task)
         db.session.commit()
