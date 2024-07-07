@@ -104,12 +104,36 @@ def add_task(project_id):
             title=form.title.data, 
             description=form.description.data, 
             project=project,
-            assignee_id=form.assignee.data if form.assignee.data != 'None' else None
+            assignee_id=form.assignee.data if form.assignee.data != 'None' else None,
+            story_points=form.story_points.data 
         )
         db.session.add(task)
         db.session.commit()
         flash('Task added successfully!')
     return redirect(url_for('main.project', project_id=project_id))
+
+@bp.route('/project/<int:project_id>/edit_task/<int:task_id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(project_id, task_id):
+    project = Project.query.get_or_404(project_id)
+    task = Task.query.get_or_404(task_id)
+    if project.owner != current_user and not ProjectAccess.query.filter_by(project_id=project_id, user_id=current_user.id).first():
+        flash('You do not have permission to edit tasks in this project.')
+        return redirect(url_for('main.dashboard'))
+
+    form = TaskForm(obj=task)
+    form.assignee.choices = [(user.id, user.username) for user in [project.owner] + [access.user for access in project.shared_with]]
+
+    if form.validate_on_submit():
+        task.title = form.title.data
+        task.description = form.description.data
+        task.assignee_id = form.assignee.data
+        task.story_points = form.story_points.data
+        db.session.commit()
+        flash('Task updated successfully!')
+        return redirect(url_for('main.project', project_id=project_id))
+    
+    return render_template('edit_task.html', project=project, task=task, form=form)
 
 @bp.route('/update_task_status/<int:task_id>', methods=['POST'])
 @login_required
@@ -146,7 +170,13 @@ def get_task_description(task_id):
     task = Task.query.get_or_404(task_id)
     if task.project.owner != current_user and not ProjectAccess.query.filter_by(project_id=task.project_id, user_id=current_user.id).first():
         return jsonify({'success': False}), 403
-    return jsonify({'title': task.title, 'description': task.description, 'assignee_id': task.assignee_id})
+    return jsonify({
+        'title': task.title,
+        'description': task.description,
+        'assignee_id': task.assignee_id,
+        'story_points': task.story_points
+    })
+
 
 @bp.route('/delete_task/<int:task_id>', methods=['POST'])
 @login_required

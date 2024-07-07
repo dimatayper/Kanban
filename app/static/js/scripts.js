@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = modal.querySelector('.modal-title');
     const modalBody = modal.querySelector('.modal-body');
     const deleteTaskBtn = document.getElementById('deleteTaskBtn');
-    
+    const editTaskBtn = document.getElementById('editTaskBtn');
+
     let currentTaskId = null;
-    
+
     tasks.forEach(task => {
         task.draggable = true;
         task.addEventListener('dragstart', dragStart);
@@ -18,7 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     modalTitle.textContent = data.title;
-                    modalBody.textContent = data.description;
+                    modalBody.innerHTML = `
+                        <p>${data.description}</p>
+                        <p><strong>Story Points:</strong> ${data.story_points || 'N/A'}</p>
+                        <p><strong>Assignee:</strong> ${data.assignee_id ? document.querySelector(`option[value="${data.assignee_id}"]`).textContent : 'Unassigned'}</p>
+                    `;
                     $('#taskDescriptionModal').modal('show');
                 });
         });
@@ -41,6 +46,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error deleting task');
                 }
             });
+        }
+    });
+
+    editTaskBtn.addEventListener('click', () => {
+        if (currentTaskId) {
+            $('#taskDescriptionModal').modal('hide');
+            $(`#editTaskModal-${currentTaskId}`).modal('show');
         }
     });
 

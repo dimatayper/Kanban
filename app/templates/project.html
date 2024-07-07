@@ -26,7 +26,10 @@
                         {% if task.assignee %}
                             <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
                         {% endif %}
-                        <div class="task-footer mt-2">
+                        <div class="task-footer mt-2 d-flex justify-content-between align-items-center">
+                            {% if task.story_points %}
+                                <span class="badge bg-info text-dark">{{ task.story_points }}</span>
+                            {% endif %}
                             <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTaskAssigneeModal-{{ task.id }}">Change Assignee</button>
                         </div>
                     </li>
@@ -45,7 +48,10 @@
                         {% if task.assignee %}
                             <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
                         {% endif %}
-                        <div class="task-footer mt-2">
+                        <div class="task-footer mt-2 d-flex justify-content-between align-items-center">
+                            {% if task.story_points %}
+                                <span class="badge bg-info text-dark">{{ task.story_points }}</span>
+                            {% endif %}
                             <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTaskAssigneeModal-{{ task.id }}">Change Assignee</button>
                         </div>
                     </li>
@@ -64,7 +70,10 @@
                         {% if task.assignee %}
                             <small class="text-muted">Assignee: {{ task.assignee.username }}</small>
                         {% endif %}
-                        <div class="task-footer mt-2">
+                        <div class="task-footer mt-2 d-flex justify-content-between align-items-center">
+                            {% if task.story_points %}
+                                <span class="badge bg-info text-dark">{{ task.story_points }}</span>
+                            {% endif %}
                             <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editTaskAssigneeModal-{{ task.id }}">Change Assignee</button>
                         </div>
                     </li>
@@ -86,6 +95,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editTaskBtn">Edit Task</button>
                     <button type="button" class="btn btn-danger" id="deleteTaskBtn">Delete Task</button>
                 </div>
             </div>
@@ -115,6 +125,10 @@
                             {{ form.assignee.label(class="form-label") }}
                             {{ form.assignee(class="form-select") }}
                         </div>
+                        <div class="mb-3">
+                            {{ form.story_points.label(class="form-label") }}
+                            {{ form.story_points(class="form-control") }}
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -125,24 +139,37 @@
         </div>
     </div>
 
-    <!-- Modal for Editing Task Assignee -->
+    <!-- Modal for Editing Task -->
     {% for task in project.tasks %}
-    <div class="modal fade" id="editTaskAssigneeModal-{{ task.id }}" tabindex="-1" aria-labelledby="editTaskAssigneeModalLabel-{{ task.id }}" aria-hidden="true">
+    <div class="modal fade" id="editTaskModal-{{ task.id }}" tabindex="-1" aria-labelledby="editTaskModalLabel-{{ task.id }}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editTaskAssigneeModalLabel-{{ task.id }}">Edit Assignee</h5>
+                    <h5 class="modal-title" id="editTaskModalLabel-{{ task.id }}">Edit Task</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ url_for('main.update_task_assignee', task_id=task.id) }}">
+                <form method="POST" action="{{ url_for('main.edit_task', project_id=project.id, task_id=task.id) }}">
                     <div class="modal-body">
+                        {{ form.hidden_tag() }}
                         <div class="mb-3">
-                            <label for="assignee-{{ task.id }}" class="form-label">Assignee</label>
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control", value=task.title) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            <textarea class="form-control" id="description-{{ task.id }}" name="description">{{ task.description }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.assignee.label(class="form-label") }}
                             <select class="form-select" id="assignee-{{ task.id }}" name="assignee">
                                 {% for user in project_users %}
-                                    <option value="{{ user.id }}" {% if task.assignee and task.assignee.id == user.id %}selected{% endif %}>{{ user.username }}</option>
+                                    <option value="{{ user.id }}" {% if task.assignee_id == user.id %}selected{% endif %}>{{ user.username }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.story_points.label(class="form-label") }}
+                            {{ form.story_points(class="form-control", value=task.story_points) }}
                         </div>
                     </div>
                     <div class="modal-footer">

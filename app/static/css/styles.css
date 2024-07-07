@@ -35,7 +35,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 300px; /* Minimum height for 5 tasks */
+    min-height: 300px;
     overflow-y: auto;
 }
 
@@ -69,12 +69,25 @@ body {
 }
 
 .task-title {
+    font-weight: bold;
     font-size: 1.1em;
 }
 
 .task-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.75em;
+    border-radius: 0.25em;
+}
+
+.badge.bg-info {
+    background-color: #17a2b8;
+    color: #fff;
 }
 
 .hide {

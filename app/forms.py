@@ -33,9 +33,10 @@ class ProjectForm(FlaskForm):
 class TaskForm(FlaskForm):
     title = StringField('Task Title', validators=[DataRequired()])
     description = TextAreaField('Task Description')
-    assignee = SelectField('Assignee', coerce=int)  # Добавлено поле для выбора ответственного
-    submit = SubmitField('Add Task')
+    assignee = SelectField('Assignee', coerce=int)
+    story_points = StringField('Story Points')
+    submit = SubmitField('Save Task')
 
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
-        self.assignee.choices = []  # Будет заполнено в маршруте
+        self.assignee.choices = []
